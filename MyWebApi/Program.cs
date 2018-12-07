@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace FluxTestApi2
+namespace MyWebApi
 {
     public class Program
     {
