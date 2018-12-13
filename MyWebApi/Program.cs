@@ -12,15 +12,6 @@ namespace MyWebApi
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .UseKestrel(options =>
-                {
-                    options.ListenAnyIP(5000);
-                    options.ListenAnyIP(5001, listenOptions =>
-                    {
-                        listenOptions.UseHttps("cert.pfx", "1234");
-                    });
-                })
-            .UseUrls("https://+;http://+");
+                .UseStartup<Startup>();
     }
 }
