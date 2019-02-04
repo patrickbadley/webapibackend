@@ -4,9 +4,8 @@ pool:
 
 variables:
   registryServerName: '$(registryName).azurecr.io'
-  imageName: '$(projectName)'
+  imageName: '$(imageName)'
   # define 4 more variables: projectName, registryName, registryLogin and registryPassword in the build pipeline in UI
-
 
 steps:
 - bash: docker build -f $(system.defaultWorkingDirectory)/$(projectName)/Dockerfile -t $(registryServerName)/$(imageName):$(build.buildId) -t $(registryServerName)/$(imageName):latest $(system.defaultWorkingDirectory)/$(projectName)
@@ -22,9 +21,9 @@ steps:
   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
 
 - task: HelmInstaller@0
-  displayName: 'Install Helm 2.11.0'
+  displayName: 'Install Helm 2.12.3'
   inputs:
-    helmVersion: 2.11.0
+    helmVersion: 2.12.3
 
 - bash: helm package --version $(build.buildId) --destination $(build.artifactStagingDirectory) $(system.defaultWorkingDirectory)/$(projectName)/charts/$(projectName)
   displayName: 'helm package'
