@@ -28,12 +28,12 @@ steps:
 - bash: helm package --version $(build.buildId) --destination $(build.artifactStagingDirectory) $(system.defaultWorkingDirectory)/charts/$(imageName)
   displayName: 'helm package'
 
-- task: PublishBuildArtifacts@1
-  inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
-    artifactName: '$(imageName)-$(build.buildId).tgz'
-    publishLocation: 'Container'
+# - task: PublishBuildArtifacts@1
+#   inputs:
+#     pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+#     artifactName: '$(imageName)-$(build.buildId).tgz'
+#     publishLocation: 'Container'
 
-# - bash: az acr helm push -n $(registryName) -u $(registryLogin) -p $(registryPassword) $(build.artifactStagingDirectory)/$(imageName)-$(build.buildId).tgz
-#   displayName: 'az acr helm push'
-#   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
+- bash: az acr helm push -n $(registryName) -u $(registryLogin) -p $(registryPassword) $(build.artifactStagingDirectory)/$(imageName)-$(build.buildId).tgz
+  displayName: 'az acr helm push'
+  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
