@@ -28,15 +28,6 @@ steps:
 - bash: helm package --version $(build.buildId) --destination $(build.artifactStagingDirectory) $(system.defaultWorkingDirectory)/charts/$(imageName)
   displayName: 'helm package'
 
-# Azure CLI
-# Run Azure CLI commands against an Azure subscription in a Shell script when runnning on Linux agent or Batch script when running on Windows agent.
-- task: AzureCLI@1
-  displayName: 'az acr helm push'
-  inputs:
-    azureSubscription: b9f48703-bafb-4873-915c-c69e69e193fa
-    inlineScript: az acr helm push -n $(registryName) -u $(registryLogin) -p $(registryPassword) $(build.artifactStagingDirectory)/$(imageName)-$(build.buildId).tgz
-  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
-
 # - bash: az acr helm push -n $(registryName) -u $(registryLogin) -p $(registryPassword) $(build.artifactStagingDirectory)/$(imageName)-$(build.buildId).tgz
 #   displayName: 'az acr helm push'
 #   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
