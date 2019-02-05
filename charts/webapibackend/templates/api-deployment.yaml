@@ -14,9 +14,14 @@ spec:
       labels:
         app: {{ .Values.api.appName }}
     spec:
+{{ if .Values.image.private }}
+      imagePullSecrets:
+        - name: {{ .Chart.Name }}-acr-secret
+{{ end }}
       containers:
         - name: {{ .Values.api.appName }}
-          image: {{ .Values.api.image }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
           - containerPort: {{ .Values.api.port | default 80 }}
           env:

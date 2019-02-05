@@ -2,9 +2,14 @@
 environment: dev
 api:
   appName: api
-  image: hmbdevopsteam.azurecr.io/webapibackend:3367
   port: 80
   type: ClusterIP
+
+image: 
+  repository: hmbdevopsteam.azurecr.io/webapibackend
+  tag: 3367
+  pullPolicy: Always
+  private: false
 
 ingress:
   secretName: tls-secret
