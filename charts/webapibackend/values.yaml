@@ -2,7 +2,7 @@
 environment: dev
 api:
   appName: api
-  image: <from-release>
+  image: hmbdevopsteam.azurecr.io/webapibackend:3367
   port: 80
   type: ClusterIP
 
