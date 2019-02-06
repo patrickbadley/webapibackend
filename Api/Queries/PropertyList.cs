@@ -3,6 +3,7 @@ using Api.Core.Search;
 using Api.Data;
 using Api.Queries.Shared.DataQueries.Handlers;
 using AutoMapper;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -63,6 +64,23 @@ namespace Api.Queries
                     //query.Where(x => x.OwnerName == "john");
                     return query;
                 }
+                protected override IQueryable<Property> ApplySortParameters(IQueryable<Property> query, Query request)
+                {
+                    var numVisitsSort = request.SortParameters.FirstOrDefault(sort => sort.PropertyName.Equals("NumVisits", StringComparison.OrdinalIgnoreCase));
+                    if (numVisitsSort != null)
+                    {
+                        if (numVisitsSort.SortDirection == SortDirection.Ascending)
+                            query = query.OrderBy(x => x.Visits.Count);
+                        else
+                            query = query.OrderByDescending(x => x.Visits.Count);
+                    }
+                    else
+                    {
+                        query = base.ApplySortParameters(query, request);
+                    }
+                    return query;
+                }
+
             }
         }
     }

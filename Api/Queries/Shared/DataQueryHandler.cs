@@ -46,9 +46,6 @@ namespace Api.Queries.Shared.DataQueries.Handlers
             // Apply Where Clause
             query = ApplyWhereClause(query, request);
 
-            // Apply Sort Parameters
-            query = ApplySortParameters(query, new List<SortParameter<TDbEntity>>());
-
             return query;
         }
 
@@ -60,38 +57,6 @@ namespace Api.Queries.Shared.DataQueries.Handlers
             {
                 Data = await query.ProjectTo<TResult>(_mapper.ConfigurationProvider).ToListAsync()
             };
-        }
-
-        protected virtual IQueryable<TDbEntity> ApplySortParameters(IQueryable<TDbEntity> query, IList<SortParameter<TDbEntity>> sortParameters)
-        {
-            if (!sortParameters.Any())
-            {
-                sortParameters.Add(DefaultSort);
-            }
-
-            var index = 0;
-            foreach (var sp in sortParameters)
-            {
-                var typeParams = new[] { Expression.Parameter(typeof(TDbEntity), "") };
-                var parameterName = sp.Property.Parameters[0].Name;
-                var propertyName = sp.Property.Body is UnaryExpression
-                                       ? ((UnaryExpression)sp.Property.Body).Operand.ToString()
-                                       : sp.Property.Body.ToString();
-                var pi = typeof(TDbEntity).GetProperty(propertyName.Replace(parameterName + ".", ""));
-
-
-                query = (IQueryable<TDbEntity>)query.Provider.CreateQuery(
-                    Expression.Call(
-                        typeof(Queryable),
-                        GetSortMethodName(index, sp.SortDirection),
-                        new Type[] { typeof(TDbEntity), pi.PropertyType },
-                        query.Expression,
-                        Expression.Lambda(Expression.Property(typeParams[0], pi), typeParams))
-                );
-
-                index++;
-            }
-            return query;
         }
 
         protected abstract IQueryable<TDbEntity> ApplyWhereClause(IQueryable<TDbEntity> query, TRequest filter);

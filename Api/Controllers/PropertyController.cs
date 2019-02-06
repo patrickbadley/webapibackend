@@ -16,8 +16,8 @@ namespace Api.Controllers
         }
 
         // GET api/Property
-        [HttpGet]
-        public async Task<IActionResult> Get([FromQuery]PropertyList.Query request)
+        [HttpPost]
+        public async Task<IActionResult> Get([FromBody]PropertyList.Query request)
         {
             return Ok(await _mediator.Send(request));
         }

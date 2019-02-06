@@ -1,12 +1,12 @@
-using System.Threading.Tasks;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using AutoMapper.QueryableExtensions;
 using Api.Core.Interfaces.Repositories;
-using MediatR;
 using Api.Core.Search;
-using System.Collections.Generic;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
 
 namespace Api.Queries.Shared.DataQueries.Handlers
 {
@@ -46,6 +46,9 @@ namespace Api.Queries.Shared.DataQueries.Handlers
             // Get count prior to applying paging
             var allResultsCount = query.CountAsync();
 
+            // Apply Sort Parameters
+            query = ApplySortParameters(query, request);
+
             // Apply Paging
             query = ApplyPagingParameters(query, request.Skip, request.Top);
 
@@ -54,6 +57,15 @@ namespace Api.Queries.Shared.DataQueries.Handlers
                 Data = await query.ProjectTo<TResult>(_mapper.ConfigurationProvider).ToListAsync(),
                 Total = await allResultsCount
             };
+        }
+        protected virtual IQueryable<TDbEntity> ApplySortParameters(IQueryable<TDbEntity> query, TRequest request)
+        {
+            if (request.SortParameters.Count != 0)
+            {
+                string orderByString = request.SortParameters.FirstOrDefault()?.PropertyName + " " + request.SortParameters.FirstOrDefault()?.SortDirection;
+                query = query.OrderBy(orderByString);
+            }
+            return query;
         }
 
         protected virtual IQueryable<TDbEntity> ApplyPagingParameters(IQueryable<TDbEntity> query, int? startIndex, int? rowsToFetch)
