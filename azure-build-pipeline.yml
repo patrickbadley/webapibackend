@@ -28,24 +28,10 @@ steps:
 - bash: helm package --version $(build.buildId) --destination $(build.artifactStagingDirectory) $(system.defaultWorkingDirectory)/charts/$(imageName)
   displayName: 'helm package'
 
-# - task: PublishBuildArtifacts@1
-#   inputs:
-#     pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
-#     artifactName: '$(imageName)-$(build.buildId).tgz'
-#     publishLocation: 'Container'
-
-#Your build pipeline references an undefined variable named ‘registryName’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
-#Your build pipeline references an undefined variable named ‘registryLogin’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
-#Your build pipeline references an undefined variable named ‘registryPassword’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
-#Your build pipeline references an undefined variable named ‘imageName’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
-
 - task: AzureCLI@1
   displayName: 'Helm Push to Registry'
   inputs:
     azureSubscription: 'Microsoft Azure Sponsorship (b9f48703-bafb-4873-915c-c69e69e193fa)'
     scriptLocation: inlineScript
     inlineScript: 'az acr helm push -n $(registryName) -u $(registryLogin) -p $(registryPassword) $(build.artifactStagingDirectory)/$(imageName)-$(build.buildId).tgz'
-
-# - bash: az acr helm push -n $(registryName) -u $(registryLogin) -p $(registryPassword) $(build.artifactStagingDirectory)/$(imageName)-$(build.buildId).tgz
-#   displayName: 'az acr helm push'
-#   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
