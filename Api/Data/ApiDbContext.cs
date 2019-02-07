@@ -11,7 +11,7 @@ namespace Api.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=Data/property-db.db");
+            optionsBuilder.UseSqlite("Data Source=property-db.db");
         }
     }
 
