@@ -8,11 +8,11 @@ variables:
   # define 4 more variables: projectName, registryName, registryLogin and registryPassword in the build pipeline in UI
 
 steps:
-- bash: docker build -f $(system.defaultWorkingDirectory)/$(projectName)/Dockerfile -t $(registryServerName)/$(imageName):$(build.buildId) -t $(registryServerName)/$(imageName):latest $(system.defaultWorkingDirectory)/$(projectName)
-  displayName: 'docker build'
-
 - bash: docker login $(registryServerName) -u $(registryLogin) -p $(registryPassword)
   displayName: 'docker login'
+
+- bash: docker build -f $(system.defaultWorkingDirectory)/$(projectName)/Dockerfile -t $(registryServerName)/$(imageName):$(build.buildId) -t $(registryServerName)/$(imageName):latest $(system.defaultWorkingDirectory)/$(projectName)
+  displayName: 'docker build'
 
 - bash: |
     docker push $(registryServerName)/$(imageName):$(build.buildId)

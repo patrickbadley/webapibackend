@@ -1,11 +1,11 @@
 FROM microsoft/dotnet:2.2-aspnetcore-runtime AS base
 WORKDIR /app
 
-FROM microsoft/dotnet:2.2-sdk AS build
+FROM hmbdevopsteam.azurecr.io/webapibackendbase:1 AS build
 WORKDIR /src
 
 COPY . Api
-WORKDIR "/src/Api"
+WORKDIR /src/Api
 
 FROM build AS publish
 RUN dotnet publish "Api.csproj" -c Release -o /app
