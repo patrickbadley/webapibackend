@@ -1,0 +1,17 @@
+# Default values for application.
+environment: dev
+api:
+  appName: api
+  port: 80
+  type: ClusterIP
+
+image: 
+  repository: hmbdevopsteam.azurecr.io/webapibackend
+  tag: 3367
+  pullPolicy: Always
+  private: false
+
+ingress:
+  secretName: tls-secret
+  hostName: hmb-dev-ops-app-dev.eastus.cloudapp.azure.com
+  certificateOwnerEmail: pjb2@hmbnet.com
