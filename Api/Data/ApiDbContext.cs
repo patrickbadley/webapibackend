@@ -24,6 +24,8 @@ namespace Api.Data
         public string City { get; set; }
         public string State { get; set; }
         public string ZipCode { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
         public ICollection<Visit> Visits { get; set; }
     }
     public class Visit

@@ -1,9 +1,7 @@
 ﻿using Bogus;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Api.Data
 {
@@ -39,6 +37,11 @@ namespace Api.Data
                 //Basic rules using built-in generators
                 .RuleFor(u => u.Date, (f, u) => f.Date.Between(DateTime.Now.AddDays(-200), DateTime.Now));
 
+            var maxLat = 40.3;
+            var minLat = 39.8;
+            var maxLong = -82.8;
+            var minLong = -83.2;
+
             var propertyIds = 1;
             var testProperties = new Faker<Property>()
                 .RuleFor(o => o.PropertyId, f => propertyIds++)
@@ -46,9 +49,11 @@ namespace Api.Data
                 .RuleFor(u => u.OwnerName, (f, u) => f.Name.FullName())
                 .RuleFor(u => u.RealtorName, f => f.PickRandom(testRealtors).Name)
                 .RuleFor(u => u.Address, f => f.Address.StreetAddress())
+                .RuleFor(u => u.Latitude, f => minLat + (f.Random.Double() + f.Random.Double()) / 2 * (maxLat - minLat))
+                .RuleFor(u => u.Longitude, f => minLong + f.Random.Double() * (maxLong - minLong))
                 .RuleFor(u => u.City, (f, u) => f.Address.City())
-                .RuleFor(u => u.State, (f, u) => f.Address.State())
-                .RuleFor(u => u.ZipCode, (f, u) => f.Address.ZipCode())
+                .RuleFor(u => u.State, (f, u) => "Ohio")
+                .RuleFor(u => u.ZipCode, (f, u) => f.PickRandom(Enumerable.Range(43000, 43245)).ToString())
                 .RuleFor(u => u.Visits, (f, u) =>
                 {
                     var visits = testVisits.Generate(f.PickRandom(Enumerable.Range(0, 20)));
@@ -63,7 +68,7 @@ namespace Api.Data
 
             var properties = testProperties.Generate(250);
 
-//            context.Visit.AddRange(user.SelectMany(u => u.Visits));
+            //            context.Visit.AddRange(user.SelectMany(u => u.Visits));
 
             context.Property.AddRange(properties);
 

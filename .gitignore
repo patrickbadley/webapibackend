@@ -260,3 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 /Api/Data/property-db.db
+/Api/property-db.db

@@ -41,6 +41,7 @@ namespace Api
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                c.CustomSchemaIds(x => x.FullName);
             });
 
             services.AddMediatR(new Type[] { typeof(PropertyList) });

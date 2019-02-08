@@ -21,5 +21,13 @@ namespace Api.Controllers
         {
             return Ok(await _mediator.Send(request));
         }
+
+        // GET api/Property
+        [HttpPost("ForMap")]
+        public async Task<IActionResult> GetForMap([FromBody]PropertyMap.Query request)
+        {
+            return Ok(await _mediator.Send(request));
+        }
+
     }
 }
