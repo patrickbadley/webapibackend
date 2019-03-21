@@ -15,14 +15,18 @@ namespace Api.Controllers
             _mediator = mediator;
         }
 
-        // GET api/Property
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery]PropertyDetails.Query request)
+        {
+            return Ok(await _mediator.Send(request));
+        }
+
         [HttpPost]
         public async Task<IActionResult> Get([FromBody]PropertyList.Query request)
         {
             return Ok(await _mediator.Send(request));
         }
 
-        // GET api/Property
         [HttpPost("ForMap")]
         public async Task<IActionResult> GetForMap([FromBody]PropertyMap.Query request)
         {
