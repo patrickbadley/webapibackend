@@ -45,7 +45,9 @@ namespace Api.Queries
             {
                 CreateMap<Property, ItemDetails>()
                     .ForMember(dest => dest.NumVisits,
-                        opt => opt.MapFrom(origin => origin.Visits.Count()));
+                        opt => opt.MapFrom(origin => origin.Visits.Count()))
+                    .ForMember(dest => dest.Visits,
+                        opt => opt.MapFrom(origin => origin.Visits.OrderByDescending(x => x.Date)));
                 CreateMap<Visit, VisitListItem>();
             }
 

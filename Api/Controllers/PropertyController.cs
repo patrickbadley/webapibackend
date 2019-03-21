@@ -15,8 +15,8 @@ namespace Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get([FromQuery]PropertyDetails.Query request)
+        [HttpGet("{PropertyId}")]
+        public async Task<IActionResult> Get([FromRoute]PropertyDetails.Query request)
         {
             return Ok(await _mediator.Send(request));
         }
