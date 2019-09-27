@@ -1,36 +1,10 @@
 pool:
   vmImage: 'Ubuntu 16.04'
 
-variables:
-  registryServerName: '$(registryName).azurecr.io'
-  imageName: '$(imageName)'
-  # define 4 more variables: projectName, registryName, registryLogin and registryPassword in the build pipeline in UI
-
 steps:
-- bash: docker login $(registryServerName) -u $(registryLogin) -p $(registryPassword)
-  displayName: 'docker login'
-
-- bash: docker build -f $(system.defaultWorkingDirectory)/$(projectName)/Dockerfile -t $(registryServerName)/$(imageName):$(build.buildId) -t $(registryServerName)/$(imageName):latest $(system.defaultWorkingDirectory)/$(projectName)
-  displayName: 'docker build'
-
-- bash: |
-    docker push $(registryServerName)/$(imageName):$(build.buildId)
-    docker push $(registryServerName)/$(imageName):latest
-  displayName: 'docker push'
-  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
-
-- task: HelmInstaller@0
-  displayName: 'Install Helm 2.12.3'
+- task: Docker@2
   inputs:
-    helmVersion: 2.12.3
-
-- bash: helm package --version $(build.buildId) --destination $(build.artifactStagingDirectory) $(system.defaultWorkingDirectory)/charts/$(imageName)
-  displayName: 'helm package'
-
-- task: AzureCLI@1
-  displayName: 'Helm Push to Registry'
-  inputs:
-    azureSubscription: 'Microsoft Azure Sponsorship (b9f48703-bafb-4873-915c-c69e69e193fa)'
-    scriptLocation: inlineScript
-    inlineScript: 'az acr helm push -n $(registryName) -u $(registryLogin) -p $(registryPassword) $(build.artifactStagingDirectory)/$(imageName)-$(build.buildId).tgz'
-  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
+    containerRegistry: 'patrickbadley'
+    repository: 'patrickbadley/webapibackend'
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'
