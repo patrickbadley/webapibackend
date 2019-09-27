@@ -7,4 +7,4 @@ steps:
     containerRegistry: 'patrickbadley'
     repository: 'patrickbadley/webapibackend'
     command: 'buildAndPush'
-    Dockerfile: '**/Dockerfile'
+    Dockerfile: 'Api/Dockerfile'
