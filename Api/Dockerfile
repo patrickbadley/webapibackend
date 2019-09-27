@@ -5,7 +5,7 @@ FROM microsoft/dotnet:2.2-sdk as build
 WORKDIR /src
 
 # Copy csproj and restore as distinct layers
-COPY **/*.csproj Api/
+COPY *.csproj Api/
 WORKDIR /src/Api
 
 RUN dotnet restore
