@@ -1,7 +1,15 @@
 FROM microsoft/dotnet:2.2-aspnetcore-runtime AS base
 WORKDIR /app
 
-FROM hmbdevopsteam.azurecr.io/webapibackendbase:1 AS build
+FROM microsoft/dotnet:2.2-sdk as build
+WORKDIR /src
+
+# Copy csproj and restore as distinct layers
+COPY **/*.csproj Api/
+WORKDIR /src/Api
+
+RUN dotnet restore
+
 WORKDIR /src
 
 COPY . Api
